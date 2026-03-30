@@ -1,0 +1,52 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+
+```
+
+## Student Phone Usage Research
+
+This data records students' daily phone usage, including the amount of time spent on their phones, whether they had a clear purpose, the main activity performed, and the time of day when usage was highest.The purpose of this analysis is to explore general trends in phone usage behaviour, such as how long students typically spend on their phones, what activities are most common, and when phone usage is most frequent during the day.
+
+```{r}
+library(tidyverse)
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vT7Y1LW_9CK6NEmm26ly59wqpmSB4hUfwNK4cra38ED7FFDhEfRhwRcooRHnZqLUbeogBpyoZp8rGGv/pub?output=csv")
+
+rename_data <- logged_data %>%
+  rename(time_spent=2,
+         purpose=3,
+         activity=4,
+         time_of_day=5)
+
+#summary values
+mean_time <- mean(rename_data$time_spent)
+max_time <- max(rename_data$time_spent)
+
+#bar_chart1
+ggplot(rename_data)+
+  geom_bar(aes(x = time_spent,fill=time_of_day)) +
+  labs(title = "Time Spent Distribution")
+#bar_chart2
+ggplot(rename_data)+
+  geom_bar(aes(x = time_spent,fill=activity)) +
+labs(title = "Phone Usage Time by Activity Type")
+
+
+```
+
+The average daily screen time is `r round(mean_time, 1)` mins. The maximum screen time recorded is `r max_time` mins.
+
+Our maximum value, `r max_time` minutes, is equivalent to 16.7 hours. This suggests that some students may be using their phones all day long, or, in extreme cases, for very long periods of time.This value may be an outlier or an unusual point.
+The presence of this outlier may skew up the average. Therefore, our average may be underestimating the daily usage time of most students.
+
+From the "Time Spent Distribution" chart, we can see that most students use their phones around the average of `r round(mean_time,1)` minutes. Usage varies by time of day, with the evening showing the highest frequency of long screen times.
+
+![](https://c.tenor.com/-qBsG1HwR4oAAAAC/tenor.gif)
